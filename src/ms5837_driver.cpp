@@ -50,7 +50,7 @@ bool MS5837Driver::init() {
 
 	// Read calibration values and CRC
     u_int8_t buffer[14];
-    uint32_t len = i2c_smbus_read_i2c_block_data(MS5837_ADDR, MS5837_PROM_READ, sizeof(buffer), buffer);
+    int32_t len = i2c_smbus_read_i2c_block_data(fd_, MS5837_PROM_READ, sizeof(buffer), buffer);
 
     if (len != sizeof(buffer)) {
         std::cerr << "Error during calibration coefficient read!" << std::endl;
