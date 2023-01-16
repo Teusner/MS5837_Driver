@@ -68,7 +68,7 @@ bool MS5837Driver::init() {
 	}
     else {
         std::cerr << "Error of CRC check!" << std::endl;
-        std::cerr << "Read " << crcRead << " Calculated " << crcCalculated << std::endl;
+        std::cerr << "Read " << int(crcRead) << " Calculated " << int(crcCalculated) << std::endl;
 	    return false; // CRC fail
     }
 }
