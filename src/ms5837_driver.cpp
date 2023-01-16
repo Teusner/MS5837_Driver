@@ -45,29 +45,34 @@ bool MS5837Driver::init() {
 	// Wait for reset to complete
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    // Requesting a PROM read
-    i2c_smbus_write_byte(fd_, MS5837_PROM_READ);
-
-    // Wait for prom read be ready
-	std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Only for safety, need to check doc
-
 	// Read calibration values and CRC
-    u_int8_t buffer[14];
-    int32_t len = i2c_smbus_read_i2c_block_data(fd_, MS5837_PROM_READ, sizeof(buffer), buffer);
-
-    if (len != sizeof(buffer)) {
-        std::cerr << "Error during calibration coefficient read!" << std::endl;
-        std::cerr << "Request length of " << sizeof(buffer) << " bytes does not match the length of read bytes " << len << std::endl;
-        return false;
-    }
-
-    std::cout << "PROM mem" << std::endl;
-    // Casting uint8_t buffer into uint16_t calibration coefficients
+    u_int8_t buffer[2];
     for (uint8_t i=0 ; i<7 ; ++i) {
-		C[i] = (buffer[2*i] << 8) | buffer[2*i+1];
+        // // Requesting a PROM read
+        // i2c_smbus_write_byte(fd_, MS5837_PROM_READ + 2*i);
+
+        // // Wait for prom read be ready
+	    // std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Only for safety, need to check doc
+
+        // PROM read
+        int32_t len = i2c_smbus_read_i2c_block_data(fd_, MS5837_PROM_READ + 2*i, sizeof(buffer), buffer);
+        if (len != sizeof(buffer)) {
+            std::cerr << "Error during calibration coefficient read!" << std::endl;
+            std::cerr << "Request length of " << sizeof(buffer) << " bytes does not match the length of read bytes " << len << std::endl;
+            return false;
+        }
+
+        // PROM storage
+		C[i] = (buffer[0] << 8) | buffer[1];
+
+        // PROM show
         std::bitset<16> b(C[i]);
         std::cout << b << std::endl;
 	}
+
+    std::cout << "PROM mem" << std::endl;
+    // Casting uint8_t buffer into uint16_t calibration coefficients
+    
 
 	// Verify that data is correct with CRC
 	uint8_t crcRead = C[0] >> 12;
