@@ -54,6 +54,7 @@ bool MS5837Driver::init() {
 
     if (len != sizeof(buffer)) {
         std::cerr << "Error during calibration coefficient read!" << std::endl;
+        std::cerr << "Request length of " << sizeof(buffer) << " bytes does not math the length of written bytes " << len << std::endl;
         return false;
     }
 
