@@ -26,20 +26,20 @@ bool MS5837Driver::init() {
 
     // Unable to open I2C port
     if (fd_ < 0) {
-        std::cout << "Unable to open I2C port " << port_ << "!" << std::endl;
+        std::cerr << "Unable to open I2C port " << port_ << "!" << std::endl;
         return false;
     }
 
     // Unable to set the adress
 	if (ioctl(fd_, I2C_SLAVE, MS5837_ADDR) < 0) {
-        std::cout << "Unable to set the adress!" << std::endl;
+        std::cerr << "Unable to set the adress!" << std::endl;
         return false;
     }
 
     // Try to reset the sensor
     uint8_t len = i2c_smbus_write_byte(fd_, MS5837_RESET);
     if (len != 1) {
-        std::cout << "Reset error!" << std::endl;
+        std::cerr << "Reset error!" << std::endl;
         return false;
     }
 
@@ -51,7 +51,7 @@ bool MS5837Driver::init() {
     len = i2c_smbus_read_i2c_block_data(MS5837_ADDR, MS5837_PROM_READ, sizeof(buffer), buffer);
 
     if (len != sizeof(buffer)) {
-        std::cout << "Error during calibration coefficient read!" << std::endl;
+        std::cerr << "Error during calibration coefficient read!" << std::endl;
         return false;
     }
 
