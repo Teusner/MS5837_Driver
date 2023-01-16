@@ -37,7 +37,7 @@ bool MS5837Driver::init() {
     }
 
     // Try to reset the sensor
-    uint8_t len = i2c_smbus_write_byte(fd_, MS5837_RESET);
+    int32_t len = i2c_smbus_write_byte(fd_, MS5837_RESET);
     if (len != 1) {
         std::cerr << "Reset error!" << std::endl;
         return false;
@@ -76,8 +76,8 @@ void MS5837Driver::setFluidDensity(float density) {
 }
 
 bool MS5837Driver::read_data() {
-    uint8_t len;
-    u_int8_t buffer[3];
+    int32_t len;
+    uint8_t buffer[3];
 
 	// Request D1 conversion
     i2c_smbus_write_byte(fd_, MS5837_CONVERT_D1_8192);
