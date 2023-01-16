@@ -1,9 +1,6 @@
 #pragma once
 
-#include <linux/i2c-dev.h>
-
 #include <string>
-
 
 class MS5837Driver {
     public:
@@ -16,7 +13,7 @@ class MS5837Driver {
 
         /** The read from I2C takes up to 40 ms, so use sparingly if possible.
          */
-        void read_data();
+        bool read_data();
 
         /** Pressure returned in mbar or mbar*conversion rate.
          */
@@ -62,7 +59,6 @@ class MS5837Driver {
 
         // Calibration coefficents
         uint16_t C[7];
-
 
         uint32_t D1, D2;
         int32_t TEMP;

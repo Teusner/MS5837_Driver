@@ -1,7 +1,9 @@
 #include "ms5837_driver/ms5837_driver.hpp"
 
-#include <linux/i2c-dev.h>
-#include <i2c/smbus.h>
+extern "C" {
+    #include <linux/i2c-dev.h>
+    #include <i2c/smbus.h>
+}
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -73,7 +75,7 @@ void MS5837Driver::setFluidDensity(float density) {
 	fluidDensity = density;
 }
 
-void MS5837Driver::read_data() {
+bool MS5837Driver::read_data() {
     uint8_t len;
     u_int8_t buffer[3];
 
@@ -85,6 +87,7 @@ void MS5837Driver::read_data() {
     len = i2c_smbus_read_block_data(fd_, MS5837_ADC_READ, buffer);
     if (len != 3) {
         std::cout << "Error in D1 request!" << std::endl;
+        return false;
     }
 	D1 = (buffer[0] << 16) | (buffer[1] << 8) | buffer[0];
 
@@ -96,10 +99,13 @@ void MS5837Driver::read_data() {
     len = i2c_smbus_read_block_data(fd_, MS5837_ADC_READ, buffer);
     if (len != 3) {
         std::cout << "Error in D2 request!" << std::endl;
+        return false;
     }
 	D2 = (buffer[0] << 16) | (buffer[1] << 8) | buffer[0];
 
 	calculate();
+
+    return true;
 }
 
 void MS5837Driver::calculate() {

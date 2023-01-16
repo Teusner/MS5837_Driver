@@ -11,6 +11,7 @@ set(MS5837_DRIVER_HEADERS include)
 # Driver
 add_library(ms5837_driver src/ms5837_driver.cpp)
 target_include_directories(ms5837_driver PUBLIC ${MS5837_DRIVER_HEADERS})
+target_link_libraries(ms5837_driver i2c)
 
 # Detecting if project is included into another
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
