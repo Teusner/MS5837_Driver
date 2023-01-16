@@ -59,7 +59,7 @@ bool MS5837Driver::init() {
     // Casting uint8_t buffer into uint16_t calibration coefficients
     for (uint8_t i=0 ; i<7 ; ++i) {
 		C[i] = (buffer[2*i] << 8) | buffer[2*i+1];
-        std::bitset<8> b(C[i]);
+        std::bitset<16> b(C[i]);
         std::cout << b << std::endl;
 	}
 
