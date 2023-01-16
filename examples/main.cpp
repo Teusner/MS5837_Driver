@@ -14,7 +14,9 @@ int main() {
         return -1;
     }
 
-    for (uint8_t i=0; i<10; ++i) {
+    driver.show_PROM();
+
+    for (uint8_t i=0; i<100; ++i) {
         bool read = driver.read_data();
 
         if (read) {
@@ -22,12 +24,12 @@ int main() {
             float t = driver.temperature();
             float d = driver.depth();
             float a = driver.altitude();
-            std::cout << "Pressure " << p << " Temperature " << t << "Depth " << d << " Altitude " << a << std::endl;
+            std::cout << "Pressure " << p << " Temperature " << t << " Depth " << d << " Altitude " << a << std::endl;
         }
         else {
             std::cerr << "Problem while reading data" << std::endl;
         }
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
