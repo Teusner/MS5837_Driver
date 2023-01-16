@@ -18,7 +18,9 @@ extern "C" {
 
 
 MS5837Driver::~MS5837Driver() {
-    close(fd_);
+    if (fd_ != -1) {
+        close(fd_);
+    }
 }
 
 bool MS5837Driver::init() {
@@ -36,19 +38,19 @@ bool MS5837Driver::init() {
         return false;
     }
 
-    // Try to reset the sensor
-    int32_t len = i2c_smbus_write_byte(fd_, MS5837_RESET);
-    if (len != 1) {
-        std::cerr << "Reset error!" << std::endl;
-        return false;
-    }
+    // Reset the sensor
+    i2c_smbus_write_byte(fd_, MS5837_RESET);
+    // if (len != 1) {
+    //     std::cerr << "Reset error!" << std::endl;
+    //     return false;
+    // }
 
 	// Wait for reset to complete
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
 	// Read calibration values and CRC
     u_int8_t buffer[14];
-    len = i2c_smbus_read_i2c_block_data(MS5837_ADDR, MS5837_PROM_READ, sizeof(buffer), buffer);
+    int32_t len = i2c_smbus_read_i2c_block_data(MS5837_ADDR, MS5837_PROM_READ, sizeof(buffer), buffer);
 
     if (len != sizeof(buffer)) {
         std::cerr << "Error during calibration coefficient read!" << std::endl;
