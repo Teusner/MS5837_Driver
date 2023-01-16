@@ -11,6 +11,8 @@ class MS5837Driver {
 
         bool init();
 
+        void show_PROM() const;
+
         /** The read from I2C takes up to 40 ms, so use sparingly if possible.
          */
         bool read_data();
@@ -72,5 +74,5 @@ class MS5837Driver {
          */
         void calculate();
 
-        uint8_t crc4(uint16_t n_prom[]);
+        uint8_t crc4(uint16_t n_prom[]) const;
 };
