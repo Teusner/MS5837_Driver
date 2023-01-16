@@ -88,7 +88,8 @@ bool MS5837Driver::read_data() {
 
     len = i2c_smbus_read_block_data(fd_, MS5837_ADC_READ, buffer);
     if (len != 3) {
-        std::cout << "Error in D1 request!" << std::endl;
+        std::cerr << "Error in D1 request!" << std::endl;
+        std::cerr << "Reading " << len << " instead of 3 bytes!" << std::endl;
         return false;
     }
 	D1 = (buffer[0] << 16) | (buffer[1] << 8) | buffer[0];
@@ -100,7 +101,8 @@ bool MS5837Driver::read_data() {
 
     len = i2c_smbus_read_block_data(fd_, MS5837_ADC_READ, buffer);
     if (len != 3) {
-        std::cout << "Error in D2 request!" << std::endl;
+        std::cerr << "Error in D2 request!" << std::endl;
+        std::cerr << "Reading " << len << " instead of 3 bytes!" << std::endl;
         return false;
     }
 	D2 = (buffer[0] << 16) | (buffer[1] << 8) | buffer[0];
