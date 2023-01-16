@@ -48,12 +48,6 @@ bool MS5837Driver::init() {
 	// Read calibration values and CRC
     u_int8_t buffer[2];
     for (uint8_t i=0 ; i<7 ; ++i) {
-        // // Requesting a PROM read
-        // i2c_smbus_write_byte(fd_, MS5837_PROM_READ + 2*i);
-
-        // // Wait for prom read be ready
-	    // std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Only for safety, need to check doc
-
         // PROM read
         int32_t len = i2c_smbus_read_i2c_block_data(fd_, MS5837_PROM_READ + 2*i, sizeof(buffer), buffer);
         if (len != sizeof(buffer)) {
@@ -64,14 +58,7 @@ bool MS5837Driver::init() {
 
         // PROM storage
 		C[i] = (buffer[0] << 8) | buffer[1];
-
-        // PROM show
-        std::bitset<16> b(C[i]);
-        std::cout << b << std::endl;
 	}
-
-    std::cout << "PROM mem" << std::endl;
-    // Casting uint8_t buffer into uint16_t calibration coefficients
     
 
 	// Verify that data is correct with CRC
@@ -103,7 +90,7 @@ bool MS5837Driver::read_data() {
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(20)); // Max conversion time per datasheet
 
-    len = i2c_smbus_read_block_data(fd_, MS5837_ADC_READ, buffer);
+    len = i2c_smbus_read_i2c_block_data(fd_, MS5837_ADC_READ, sizeof(buffer), buffer);
     if (len != 3) {
         std::cerr << "Error in D1 request!" << std::endl;
         std::cerr << "Reading " << len << " instead of 3 bytes!" << std::endl;
@@ -116,7 +103,7 @@ bool MS5837Driver::read_data() {
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(20)); // Max conversion time per datasheet
 
-    len = i2c_smbus_read_block_data(fd_, MS5837_ADC_READ, buffer);
+    len = i2c_smbus_read_i2c_block_data(fd_, MS5837_ADC_READ, sizeof(buffer), buffer);
     if (len != 3) {
         std::cerr << "Error in D2 request!" << std::endl;
         std::cerr << "Reading " << len << " instead of 3 bytes!" << std::endl;
