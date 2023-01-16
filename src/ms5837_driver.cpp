@@ -71,8 +71,8 @@ bool MS5837Driver::init() {
 		return true; // Initialization success
 	}
     else {
-        std::bitset<8> crcR(crcRead);
-        std::bitset<8> crcC(crcCalculated);
+        std::bitset<4> crcR(crcRead);
+        std::bitset<4> crcC(crcCalculated);
         std::cerr << "Error of CRC check!" << std::endl;
         std::cerr << "Read " << crcR << " Calculated " << crcC << std::endl;
 	    return false; // CRC fail
