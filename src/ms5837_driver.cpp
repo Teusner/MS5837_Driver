@@ -15,6 +15,7 @@ extern "C" {
 #include <iostream>
 #include <chrono>
 #include <unistd.h>
+#include <bitset>
 
 
 MS5837Driver::~MS5837Driver() {
@@ -54,9 +55,12 @@ bool MS5837Driver::init() {
         return false;
     }
 
+    std::cout << "PROM mem" << std::endl;
     // Casting uint8_t buffer into uint16_t calibration coefficients
     for (uint8_t i=0 ; i<7 ; ++i) {
 		C[i] = (buffer[2*i] << 8) | buffer[2*i+1];
+        std::bitset<8> b(C[i]);
+        std::cout << b << std::endl;
 	}
 
 	// Verify that data is correct with CRC
@@ -67,9 +71,11 @@ bool MS5837Driver::init() {
 		return true; // Initialization success
 	}
     else {
+        std::bitset<8> crcR(crcRead);
+        std::bitset<8> crcC(crcCalculated);
         std::cerr << "Error of CRC check!" << std::endl;
-        std::cerr << "Read " << int(crcRead) << " Calculated " << int(crcCalculated) << std::endl;
-	    return true; // CRC fail
+        std::cerr << "Read " << crcR << " Calculated " << crcC << std::endl;
+	    return false; // CRC fail
     }
 }
 
