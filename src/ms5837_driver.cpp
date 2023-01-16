@@ -40,10 +40,6 @@ bool MS5837Driver::init() {
 
     // Reset the sensor
     i2c_smbus_write_byte(fd_, MS5837_RESET);
-    // if (len != 1) {
-    //     std::cerr << "Reset error!" << std::endl;
-    //     return false;
-    // }
 
 	// Wait for reset to complete
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -70,8 +66,11 @@ bool MS5837Driver::init() {
 	if ( crcCalculated == crcRead ) {
 		return true; // Initialization success
 	}
-
-	return false; // CRC fail
+    else {
+        std::cerr << "Error of CRC check!" << std::endl;
+        std::cerr << "Read " << crcRead << " Calculated " << crcCalculated << std::endl;
+	    return false; // CRC fail
+    }
 }
 
 void MS5837Driver::setFluidDensity(float density) {
