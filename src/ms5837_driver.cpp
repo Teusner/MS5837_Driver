@@ -178,7 +178,7 @@ float MS5837Driver::altitude() {
 	return (1-std::pow((pressure()/1013.25),.190284))*145366.45*.3048;
 }
 
-uint8_t MS5837Driver::crc4(uint16_t n_prom[]) const {
+uint8_t MS5837Driver::crc4(uint16_t n_prom[]) {
 	uint16_t n_rem = 0;
 
 	n_prom[0] = ((n_prom[0]) & 0x0FFF);
@@ -204,7 +204,7 @@ uint8_t MS5837Driver::crc4(uint16_t n_prom[]) const {
 	return (n_rem ^ 0x00);
 }
 
-void MS5837Driver::show_PROM() const {
+void MS5837Driver::show_PROM() {
     std::cout << "PROM" << std::endl;
     for (uint8_t i=0 ; i<7 ; ++i) {
         // PROM show
