@@ -45,6 +45,12 @@ bool MS5837Driver::init() {
 	// Wait for reset to complete
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
+    // Requesting a PROM read
+    i2c_smbus_write_byte(fd_, MS5837_PROM_READ);
+
+    // Wait for prom read be ready
+	std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Only for safety, need to check doc
+
 	// Read calibration values and CRC
     u_int8_t buffer[14];
     int32_t len = i2c_smbus_read_i2c_block_data(fd_, MS5837_PROM_READ, sizeof(buffer), buffer);
