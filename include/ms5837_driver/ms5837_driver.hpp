@@ -67,7 +67,7 @@ class MS5837Driver {
         int32_t P;
         int port;
 
-        float fluidDensity;
+        float fluidDensity=1000.;
 
         /** Performs calculations per the sensor data sheet for conversion and
          *  second order compensation.
