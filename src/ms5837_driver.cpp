@@ -81,6 +81,10 @@ void MS5837Driver::setFluidDensity(float density) {
 	fluidDensity = density;
 }
 
+void MS5837Driver::setCalibrationPressure(float pressure) {
+	calibrationPressure = pressure;
+}
+
 bool MS5837Driver::read_data() {
     int32_t len;
     uint8_t buffer[3];
@@ -171,11 +175,11 @@ float MS5837Driver::temperature() {
 }
 
 float MS5837Driver::depth() {
-	return (pressure(MS5837Driver::Pa)-101300)/(fluidDensity*9.80665);
+	return (pressure(MS5837Driver::Pa)-100.*calibrationPressure)/(fluidDensity*9.80665);
 }
 
 float MS5837Driver::altitude() {
-	return (1-std::pow((pressure()/1013.25),.190284))*145366.45*.3048;
+	return (1-std::pow((pressure()/calibrationPressure),.190284))*145366.45*.3048;
 }
 
 uint8_t MS5837Driver::crc4(uint16_t n_prom[]) {

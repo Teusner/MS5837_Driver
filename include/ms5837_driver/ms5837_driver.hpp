@@ -31,6 +31,10 @@ class MS5837Driver {
          */
         void setFluidDensity(float density);
 
+        /** Provide the zero value of the pressure in mbar. Default is 1013 mbar.
+         */
+        void MS5837Driver::setCalibrationPressure(float pressure);
+
         /** Depth returned in meters (valid for operation in incompressible
          *  liquids only. Uses density that is set for fresh or seawater.
          */
@@ -67,7 +71,9 @@ class MS5837Driver {
         int32_t P;
         int port;
 
-        float fluidDensity=1000.;
+        float fluidDensity=997.;
+
+        float calibrationPressure=1013.0;
 
         /** Performs calculations per the sensor data sheet for conversion and
          *  second order compensation.
